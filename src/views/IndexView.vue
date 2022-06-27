@@ -58,7 +58,7 @@
     </div>
     <div class="gap"></div>
     <div class="nearby">
-      <h3>附近店铺</h3>
+      <span class="header">附近店铺</span>
       <div class="shop">
         <img src="http://www.dell-lee.com/imgs/vue3/near.png">
         <div class="content">
@@ -96,44 +96,44 @@
           <p>VIP尊享满89元减4元运费券（每月3张）</p>
         </div>
       </div>
-      <!--      <div class="shop">-->
-      <!--        <img src="http://www.dell-lee.com/imgs/vue3/near.png">-->
-      <!--        <div class="content">-->
-      <!--          <span class="shop_name">沃尔玛</span>-->
-      <!--          <div class="desc">-->
-      <!--            <span>月售1万+</span>-->
-      <!--            <span>起送0</span>-->
-      <!--            <span>基础运费5</span>-->
-      <!--          </div>-->
-      <!--          <p>VIP尊享满89元减4元运费券（每月3张）</p>-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <div class="shop">
+        <img src="http://www.dell-lee.com/imgs/vue3/near.png">
+        <div class="content">
+          <span class="shop_name">沃尔玛</span>
+          <div class="desc">
+            <span>月售1万+</span>
+            <span>起送0</span>
+            <span>基础运费5</span>
+          </div>
+          <p>VIP尊享满89元减4元运费券（每月3张）</p>
+        </div>
+      </div>
     </div>
-    <div class="docker">
+  </div>
+  <div class="docker">
       <span class="docker_item">
         <div>
           <home theme="outline" size="20" fill="#333"/>
         </div>
         <span>首页</span>
       </span>
-      <span class="docker_item"><div>
+    <span class="docker_item"><div>
           <shopping theme="outline" size="20" fill="#333"/>
         </div>
         <span>购物车</span>
       </span>
-      <span class="docker_item">
+    <span class="docker_item">
         <div>
           <order theme="outline" size="20" fill="#333"/>
         </div>
         <span>订单</span>
       </span>
-      <span class="docker_item">
+    <span class="docker_item">
         <div>
           <user theme="outline" size="20" fill="#333"/>
         </div>
         <span>我的</span>
       </span>
-    </div>
   </div>
 </template>
 
@@ -159,7 +159,10 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
+  bottom: 50px;
+  right: 0;
   padding: 0 18px;
+  /*overflow-y: auto;*/
 }
 
 .address {
@@ -170,22 +173,23 @@ export default {
 }
 
 .search {
-  /*border-sizing: border-box;*/
+  position: relative;
 }
 
 .search span {
-  /*position: absolute;*/
-  /*left: 16px;*/
-  /*top: 8px;*/
+  position: absolute;
+  left: 5px;
+  top: 5px;
 }
 
 .search input {
-  /*position: relative;*/
   width: 100%;
   border-radius: 16px;
   border: none;
   height: 32px;
   background-color: #f5f5f5;
+  padding-left: 40px;
+  box-sizing: border-box;
 }
 
 .banner img {
@@ -230,14 +234,24 @@ export default {
   height: 230px;
   /*height: 100%;*/
   overflow: auto;
+  /*overflow-y: auto;*/
+
+}
+
+.nearby .header {
+  display: block;
+  padding-top: 16px;
+  padding-bottom: 12px;
 }
 
 .nearby .shop {
   display: flex;
+  padding-bottom: 12px;
 }
 
 .nearby .shop .shop_name {
   font-size: 16px;
+  padding-bottom: 8px;
 }
 
 .nearby img {
@@ -250,16 +264,25 @@ export default {
 .shop .desc {
   font-size: 13px;
   padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.shop .desc span {
+
+  padding-right: 16px;
 }
 
 .shop p {
   font-size: 13px;
   color: #E93B3B;
+  padding-bottom: 12px;
+  margin: 0;
 }
 
-/*.shop .content{*/
-/*  flex: 1;*/
-/*}*/
+.shop .content {
+  border-bottom: 1px solid #f5f5f5;
+}
+
 .docker {
   position: absolute;
   left: 0;
