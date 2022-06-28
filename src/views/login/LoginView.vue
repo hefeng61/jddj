@@ -16,7 +16,7 @@
         登录
       </div>
       <div class="tips">
-        <span>立即注册</span> |
+        <span @click="handleRegister">立即注册</span> |
         <span>忘记密码</span>
       </div>
     </div>
@@ -26,7 +26,7 @@
 
 <script>
 import { reactive, toRefs } from 'vue'
-import useRouter from 'vue-router'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'login',
@@ -35,21 +35,25 @@ export default {
       account: 'admin',
       password: '123'
     })
-    // const router = useRouter()
+    const router = useRouter()
     const handleLogin = () => {
       const {
         account,
         password
       } =
         toRefs(form)
-      console.log(account.value, password.value)
       if (account.value === 'admin' && password.value === '123') {
-        // router.push({ path: '/' })
+        localStorage.setItem('isLogin', true)
+        router.push({ path: '/' })
       }
+    }
+    const handleRegister = () => {
+      router.push({ name: 'register' })
     }
     return {
       form,
-      handleLogin
+      handleLogin,
+      handleRegister
     }
   }
 }

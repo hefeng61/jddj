@@ -110,39 +110,42 @@
       </div>
     </div>
   </div>
-  <div class="docker">
-      <span class="docker_item">
-        <div>
-          <home theme="outline" size="20" fill="#333"/>
-        </div>
-        <span>首页</span>
-      </span>
-    <span class="docker_item"><div>
-          <shopping theme="outline" size="20" fill="#333"/>
-        </div>
-        <span>购物车</span>
-      </span>
-    <span class="docker_item">
-        <div>
-          <order theme="outline" size="20" fill="#333"/>
-        </div>
-        <span>订单</span>
-      </span>
-    <span class="docker_item">
-        <div>
-          <user theme="outline" size="20" fill="#333"/>
-        </div>
-        <span>我的</span>
-      </span>
-  </div>
+<!--  <div class="docker">-->
+<!--      <span class="docker_item">-->
+<!--        <div>-->
+<!--          <home theme="outline" size="20" fill="#333"/>-->
+<!--        </div>-->
+<!--        <span>首页</span>-->
+<!--      </span>-->
+<!--    <span class="docker_item"><div>-->
+<!--          <shopping theme="outline" size="20" fill="#333"/>-->
+<!--        </div>-->
+<!--        <span>购物车</span>-->
+<!--      </span>-->
+<!--    <span class="docker_item">-->
+<!--        <div>-->
+<!--          <order theme="outline" size="20" fill="#333"/>-->
+<!--        </div>-->
+<!--        <span>订单</span>-->
+<!--      </span>-->
+<!--    <span class="docker_item">-->
+<!--        <div>-->
+<!--          <user theme="outline" size="20" fill="#333"/>-->
+<!--        </div>-->
+<!--        <span>我的</span>-->
+<!--      </span>-->
+<!--  </div>-->
+  <Dock/>
 </template>
 
 <script>
 import { Home, Shopping, Order, User, Local, Remind, Search } from '@icon-park/vue-next'
+import Dock from '@/components/home/Dock'
 
 export default {
   name: 'indexView',
   components: {
+    Dock,
     Home,
     Shopping,
     Order,
@@ -167,7 +170,7 @@ export default {
 
 .address {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 22px;
   margin: 16px 0;
 }
@@ -231,7 +234,7 @@ export default {
 }
 
 .nearby {
-  height: 230px;
+  height: 260px;
   /*height: 100%;*/
   overflow: auto;
   /*overflow-y: auto;*/
