@@ -19,7 +19,7 @@
         注册
       </div>
       <div class="tips">
-        <span>已有账号去登陆</span>
+        <span @click="handleLogin">已有账号去登陆</span>
       </div>
     </div>
 
@@ -27,8 +27,17 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+
 export default {
-  name: 'register'
+  name: 'register',
+  setup () {
+    const router = useRouter()
+    const handleLogin = () => {
+      router.push({ path: '/login' })
+    }
+    return { handleLogin }
+  }
 }
 </script>
 
@@ -70,7 +79,7 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.10);
   padding-left: 16px;
   box-sizing: border-box;
-  color: rgba(0,0,0,0.50);
+  color: rgba(0, 0, 0, 0.50);
 }
 
 .login_btn {

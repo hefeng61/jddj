@@ -20,32 +20,59 @@
         <span>忘记密码</span>
       </div>
     </div>
-
+    <Toast v-if="show" :msg="msg"/>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { get } from '../../util/request'
+import Toast from '@/components/Toast'
 
 export default {
   name: 'login',
+  components: { Toast },
   setup () {
     const form = reactive({
       account: 'admin',
       password: '123'
     })
+    const show = ref(false)
+    const msg = ref('')
+
     const router = useRouter()
-    const handleLogin = () => {
-      const {
-        account,
-        password
-      } =
-        toRefs(form)
-      if (account.value === 'admin' && password.value === '123') {
+    const handleLogin = async () => {
+      // axios.get('/api/login', {
+      //   params: {
+      //     ...form
+      //   }
+      // }).then(res => {
+      //   if (res.data.status === 200) {
+      //     localStorage.setItem('isLogin', true)
+      //     showToast.value = true
+      //     msg.value = '登录成功'
+      //     router.push({ path: '/' })
+      //   }
+      // })
+      const res = await get('/api/login', { ...form })
+      console.log(res)
+      if (res.code === 0) {
         localStorage.setItem('isLogin', true)
         router.push({ path: '/' })
+      } else {
+        showToast('登陆失败')
       }
+    }
+
+    const showToast = (message) => {
+      console.log(message)
+      show.value = true
+      msg.value = message
+      setTimeout(() => {
+        show.value = false
+        // msg.value = ''
+      }, 2000)
     }
     const handleRegister = () => {
       router.push({ name: 'register' })
@@ -53,7 +80,10 @@ export default {
     return {
       form,
       handleLogin,
-      handleRegister
+      handleRegister,
+      showToast,
+      show,
+      msg
     }
   }
 }

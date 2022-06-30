@@ -43,7 +43,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   console.log(to, from)
   const isLogin = localStorage.getItem('isLogin')
-  if (to.name === 'login' || isLogin) {
+  if (isLogin || to.name === 'login' || to.name === 'register') {
     next()
   } else {
     next({ name: 'login' })
