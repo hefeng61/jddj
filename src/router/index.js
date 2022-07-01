@@ -3,6 +3,7 @@ import LoginView from '@/views/login/LoginView'
 import IndexView from '@/views/IndexView'
 import Mine from '@/views/Mine'
 import RegisterView from '@/views/login/RegisterView'
+import ShopDetail from '@/views/ShopDetail'
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     path: '/mine',
     name: 'mine',
     component: Mine
+  },
+  {
+    path: '/detail',
+    name: 'ShopDetail',
+    component: ShopDetail
   }
 ]
 

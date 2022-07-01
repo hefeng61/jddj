@@ -59,100 +59,63 @@
     <div class="gap"></div>
     <div class="nearby">
       <span class="header">附近店铺</span>
-      <div class="shop">
-        <img src="http://www.dell-lee.com/imgs/vue3/near.png">
-        <div class="content">
-          <span class="shop_name">沃尔玛</span>
-          <div class="desc">
-            <span>月售1万+</span>
-            <span>起送0</span>
-            <span>基础运费5</span>
-          </div>
-          <p>VIP尊享满89元减4元运费券（每月3张）</p>
-        </div>
-      </div>
-      <div class="shop">
-        <img src="http://www.dell-lee.com/imgs/vue3/near.png">
-        <div class="content">
-          <span class="shop_name">沃尔玛</span>
-          <div class="desc">
-            <span>月售1万+</span>
-            <span>起送0</span>
-            <span>基础运费5</span>
-          </div>
-          <p>VIP尊享满89元减4元运费券（每月3张）</p>
-        </div>
-        <div class="line"></div>
-      </div>
-      <div class="shop">
-        <img src="http://www.dell-lee.com/imgs/vue3/near.png">
-        <div class="content">
-          <span class="shop_name">沃尔玛</span>
-          <div class="desc">
-            <span>月售1万+</span>
-            <span>起送0</span>
-            <span>基础运费5</span>
-          </div>
-          <p>VIP尊享满89元减4元运费券（每月3张）</p>
-        </div>
-      </div>
-      <div class="shop">
-        <img src="http://www.dell-lee.com/imgs/vue3/near.png">
-        <div class="content">
-          <span class="shop_name">沃尔玛</span>
-          <div class="desc">
-            <span>月售1万+</span>
-            <span>起送0</span>
-            <span>基础运费5</span>
-          </div>
-          <p>VIP尊享满89元减4元运费券（每月3张）</p>
-        </div>
-      </div>
+      <ShopInfo v-for="item in shopList" :key="item.id" :item="item" @click="handleDetail"/>
     </div>
   </div>
-<!--  <div class="docker">-->
-<!--      <span class="docker_item">-->
-<!--        <div>-->
-<!--          <home theme="outline" size="20" fill="#333"/>-->
-<!--        </div>-->
-<!--        <span>首页</span>-->
-<!--      </span>-->
-<!--    <span class="docker_item"><div>-->
-<!--          <shopping theme="outline" size="20" fill="#333"/>-->
-<!--        </div>-->
-<!--        <span>购物车</span>-->
-<!--      </span>-->
-<!--    <span class="docker_item">-->
-<!--        <div>-->
-<!--          <order theme="outline" size="20" fill="#333"/>-->
-<!--        </div>-->
-<!--        <span>订单</span>-->
-<!--      </span>-->
-<!--    <span class="docker_item">-->
-<!--        <div>-->
-<!--          <user theme="outline" size="20" fill="#333"/>-->
-<!--        </div>-->
-<!--        <span>我的</span>-->
-<!--      </span>-->
-<!--  </div>-->
+
   <Dock/>
 </template>
 
 <script>
-import { Home, Shopping, Order, User, Local, Remind, Search } from '@icon-park/vue-next'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Local, Remind, Search } from '@icon-park/vue-next'
+import { get } from '../util/request'
 import Dock from '@/components/home/Dock'
+import ShopInfo from '@/components/home/ShopInfo'
+
+const handleShopEffect = () => {
+  const shopList = ref([])
+  const getShopInfo = () => {
+    get('/api/shop').then(res => {
+      shopList.value = res.data
+    })
+  }
+  return {
+    shopList,
+    getShopInfo
+  }
+}
+
+const handleDetailEffect = () => {
+  const router = useRouter()
+  const handleDetail = () => {
+    router.push({ path: '/detail' })
+  }
+  return { handleDetail }
+}
 
 export default {
   name: 'indexView',
   components: {
+    ShopInfo,
     Dock,
-    Home,
-    Shopping,
-    Order,
-    User,
     Local,
     Remind,
     Search
+  },
+  setup () {
+    const {
+      shopList,
+      getShopInfo
+    } = handleShopEffect()
+    getShopInfo()
+
+    const { handleDetail } = handleDetailEffect()
+    return {
+      shopList,
+      handleDetail
+    }
   }
 }
 </script>
@@ -165,7 +128,6 @@ export default {
   bottom: 50px;
   right: 0;
   padding: 0 18px;
-  /*overflow-y: auto;*/
 }
 
 .address {

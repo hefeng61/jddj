@@ -20,41 +20,30 @@
         <span>忘记密码</span>
       </div>
     </div>
-    <Toast v-if="show" :msg="msg"/>
+    <Toast v-if="toastData.showToast" :msg="toastData.msg"/>
   </div>
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { get } from '../../util/request'
-import Toast from '@/components/Toast'
+import Toast, { handleToastEffect } from '@/components/Toast'
 
 export default {
   name: 'login',
   components: { Toast },
   setup () {
+    const router = useRouter()
     const form = reactive({
       account: 'admin',
       password: '123'
     })
-    const show = ref(false)
-    const msg = ref('')
-
-    const router = useRouter()
+    const {
+      toastData,
+      showToast
+    } = handleToastEffect()
     const handleLogin = async () => {
-      // axios.get('/api/login', {
-      //   params: {
-      //     ...form
-      //   }
-      // }).then(res => {
-      //   if (res.data.status === 200) {
-      //     localStorage.setItem('isLogin', true)
-      //     showToast.value = true
-      //     msg.value = '登录成功'
-      //     router.push({ path: '/' })
-      //   }
-      // })
       const res = await get('/api/login', { ...form })
       console.log(res)
       if (res.code === 0) {
@@ -63,17 +52,17 @@ export default {
       } else {
         showToast('登陆失败')
       }
+      // res.then(res => {
+      //   console.log(res)
+      //   if (res.code === 0) {
+      //     localStorage.setItem('isLogin', true)
+      //     router.push({ path: '/' })
+      //   } else {
+      //     showToast('登陆失败')
+      //   }
+      // })
     }
 
-    const showToast = (message) => {
-      console.log(message)
-      show.value = true
-      msg.value = message
-      setTimeout(() => {
-        show.value = false
-        // msg.value = ''
-      }, 2000)
-    }
     const handleRegister = () => {
       router.push({ name: 'register' })
     }
@@ -81,9 +70,8 @@ export default {
       form,
       handleLogin,
       handleRegister,
-      showToast,
-      show,
-      msg
+      toastData,
+      showToast
     }
   }
 }
