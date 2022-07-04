@@ -1,9 +1,13 @@
 <template>
   <div class="content">
     <div class="search">
-      <left theme="outline" size="20" fill="#333"/>
-      <div>
-        <search theme="outline" size="20" fill="#333"/>
+      <span class="back">
+        <left theme="outline" size="20" fill="#333"/>
+      </span>
+      <div class="search_item">
+        <span>
+          <search theme="outline" size="20" fill="#333"/>
+        </span>
         <input placeholder="请输入商品名称搜索">
       </div>
     </div>
@@ -80,12 +84,34 @@ export default {
 .search {
   height: 32px;
   margin: 16px 0;
+  width: 100%;
   display: flex;
-  justify-content: center;
+  /*justify-content: center;*/
+  align-items: center;
+}
+.search .back{
+  margin-right: 8px;
 }
 
-.search input {
+.search_item {
+  position: relative;
   height: 100%;
+  width: 100%;
+
+}
+.search_item span{
+  position: absolute;
+  top: 4px;
+  left: 5px;
+}
+.search_item input {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 16px;
+  background: #F5F5F5;
+  border: none;
+  padding-left: 40px;
 }
 
 .shop {
@@ -156,9 +182,11 @@ export default {
   height: 68px;
   margin: 0 16px 16px 12px;
 }
-.detail h5{
+
+.detail h5 {
   margin: 0;
 }
+
 .footer {
   position: absolute;
   left: 0;

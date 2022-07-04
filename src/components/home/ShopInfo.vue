@@ -14,22 +14,6 @@
 </template>
 
 <script>
-// import { ref } from 'vue'
-// import { get } from '@/util/request'
-//
-// const handleShopInfo = () => {
-//   const shopList = ref([])
-//   const getShopList = () => {
-//     get('/api/shop').then(res => {
-//       shopList.value = res.data
-//     })
-//   }
-//   return {
-//     shopList,
-//     getShopList
-//   }
-// }
-
 export default {
   name: 'Shop',
   props: ['item']
