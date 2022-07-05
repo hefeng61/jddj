@@ -59,7 +59,7 @@
     <div class="gap"></div>
     <div class="nearby">
       <span class="header">附近店铺</span>
-      <ShopInfo v-for="item in shopList" :key="item.id" :item="item" @click="handleDetail"/>
+      <ShopInfo v-for="item in shopList" :key="item.id" :item="item" @click="handleDetail(item.id)"/>
     </div>
   </div>
 
@@ -89,8 +89,10 @@ const handleShopEffect = () => {
 
 const handleDetailEffect = () => {
   const router = useRouter()
-  const handleDetail = () => {
-    router.push({ path: '/detail' })
+  const handleDetail = (id) => {
+    router.push({
+      path: `/detail/${id}`
+    })
   }
   return { handleDetail }
 }

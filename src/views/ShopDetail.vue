@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="search">
-      <span class="back">
+      <span class="back" @click="handleBack">
         <left theme="outline" size="20" fill="#333"/>
       </span>
       <div class="search_item">
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+
+import { useRouter } from 'vue-router'
 import { Search, Left, Shopping, AddOne } from '@icon-park/vue-next'
 import Shop from '@/components/home/ShopInfo'
 
@@ -62,6 +64,7 @@ export default {
     AddOne
   },
   setup () {
+    const router = useRouter()
     const item = {
       id: 1,
       name: '沃尔玛',
@@ -71,7 +74,13 @@ export default {
       expressPrice: 5,
       slogan: 'VIP尊享满89元减4元运费券（每月3张）'
     }
-    return { item }
+    const handleBack = () => {
+      router.go(-1)
+    }
+    return {
+      item,
+      handleBack
+    }
   }
 }
 </script>
@@ -89,7 +98,8 @@ export default {
   /*justify-content: center;*/
   align-items: center;
 }
-.search .back{
+
+.search .back {
   margin-right: 8px;
 }
 
@@ -99,11 +109,13 @@ export default {
   width: 100%;
 
 }
-.search_item span{
+
+.search_item span {
   position: absolute;
   top: 4px;
   left: 5px;
 }
+
 .search_item input {
   height: 100%;
   width: 100%;
