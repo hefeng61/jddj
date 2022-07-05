@@ -37,7 +37,8 @@ export default {
 <style scoped>
 .shop {
   display: flex;
-  padding-bottom: 12px;
+  /*padding-bottom: 12px;*/
+  padding: 0 18px;
 }
 
 .shop .shop_name {

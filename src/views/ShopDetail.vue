@@ -1,44 +1,8 @@
 <template>
   <div class="content">
-    <div class="search">
-      <span class="back" @click="handleBack">
-        <left theme="outline" size="20" fill="#333"/>
-      </span>
-      <div class="search_item">
-        <span>
-          <search theme="outline" size="20" fill="#333"/>
-        </span>
-        <input placeholder="请输入商品名称搜索">
-      </div>
-    </div>
+    <Search/>
     <Shop :item="item"/>
-
-    <div class="goods">
-      <div class="sidebar">
-        <ul>
-          <li>全部商品</li>
-          <li>秒杀</li>
-          <li>新鲜水果</li>
-          <li>休闲食品</li>
-          <li>时令蔬菜</li>
-          <li>肉蛋家禽</li>
-        </ul>
-      </div>
-      <div class="detail">
-        <img src="http://www.dell-lee.com/imgs/vue3/near.png">
-        <div>
-          <h5>番茄250g/份</h5>
-          <span>月售10件</span>
-          <div class="price">
-            <span>33.6</span>
-            <span>33.6</span>
-          </div>
-        </div>
-
-      </div>
-      <add-one theme="outline" size="20" fill="#333"/>
-    </div>
-
+    <Content/>
   </div>
 
   <div class="footer">
@@ -50,21 +14,20 @@
 
 <script>
 
-import { useRouter } from 'vue-router'
-import { Search, Left, Shopping, AddOne } from '@icon-park/vue-next'
+import { Shopping } from '@icon-park/vue-next'
 import Shop from '@/components/home/ShopInfo'
+import Content from '@/components/shop/Content'
+import SearchComponent from '@/components/shop/SearchComponent'
 
 export default {
   name: 'ShopDetail',
   components: {
+    Content,
     Shop,
-    Search,
-    Left,
-    Shopping,
-    AddOne
+    Search: SearchComponent,
+    Shopping
   },
   setup () {
-    const router = useRouter()
     const item = {
       id: 1,
       name: '沃尔玛',
@@ -74,12 +37,9 @@ export default {
       expressPrice: 5,
       slogan: 'VIP尊享满89元减4元运费券（每月3张）'
     }
-    const handleBack = () => {
-      router.go(-1)
-    }
+
     return {
-      item,
-      handleBack
+      item
     }
   }
 }
@@ -87,118 +47,8 @@ export default {
 
 <style scoped>
 .content {
-  padding: 0 18px;
+  /*padding: 0 18px;*/
 }
-
-.search {
-  height: 32px;
-  margin: 16px 0;
-  width: 100%;
-  display: flex;
-  /*justify-content: center;*/
-  align-items: center;
-}
-
-.search .back {
-  margin-right: 8px;
-}
-
-.search_item {
-  position: relative;
-  height: 100%;
-  width: 100%;
-
-}
-
-.search_item span {
-  position: absolute;
-  top: 4px;
-  left: 5px;
-}
-
-.search_item input {
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 16px;
-  background: #F5F5F5;
-  border: none;
-  padding-left: 40px;
-}
-
-.shop {
-  display: flex;
-}
-
-.shop img {
-  width: 56px;
-  height: 56px;
-  padding-right: 16px;
-  padding-bottm: 16px;
-}
-
-.shop .shop_name {
-  font-family: PingFangSC-Regular;
-  font-size: 16px;
-  color: #333333;
-}
-
-.shop .desc {
-  margin: 8px 0;
-}
-
-.shop .desc span {
-
-  font-family: PingFangSC-Regular;
-  font-size: 13px;
-  color: #333333;
-}
-
-.shop p {
-  margin: 0;
-  font-family: PingFangSC-Regular;
-  font-size: 13px;
-  color: #E93B3B;
-}
-
-.goods {
-  display: flex;
-}
-
-.sidebar {
-  width: 76px;
-  height: 100%;
-}
-
-.sidebar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.sidebar ul li {
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  background: #F5F5F5;
-  border-radius: 2px;
-  border-radius: 2px;
-}
-
-.detail {
-  display: flex;
-}
-
-.detail img {
-  width: 68px;
-  height: 68px;
-  margin: 0 16px 16px 12px;
-}
-
-.detail h5 {
-  margin: 0;
-}
-
 .footer {
   position: absolute;
   left: 0;
