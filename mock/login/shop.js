@@ -26,7 +26,72 @@ const shopList = [
   }
 ]
 
+const productList = [
+  {
+    id: 1,
+    name: '番茄250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    sales: 10,
+    originalPrice: 33.8,
+    price: 32.8,
+    category: 'vegetable'
+  },
+  {
+    id: 2,
+    name: '提子250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    sales: 10,
+    originalPrice: 33.8,
+    price: 32.8,
+    category: 'fruit'
+  },
+  {
+    id: 3,
+    name: '香蕉250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    sales: 10,
+    originalPrice: 33.8,
+    price: 32.8,
+    category: 'fruit'
+  },
+  {
+    id: 4,
+    name: '提子250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    sales: 10,
+    originalPrice: 13.8,
+    price: 32.8,
+    category: 'secKill'
+  },
+  {
+    id: 5,
+    name: '主体250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    sales: 10,
+    originalPrice: 33.8,
+    price: 32.8,
+    category: 'meat'
+  },
+  {
+    id: 6,
+    name: '鸡胸肉250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    sales: 10,
+    originalPrice: 33.8,
+    price: 32.8,
+    category: 'meat'
+  }
+]
+
 export default {
+  'get|/api/shop/product': option => {
+    // productList = productList.filter(item => item.category === option)
+    return {
+      code: 0,
+      status: 200,
+      data: productList
+    }
+  },
   'get|/api/shop': option => {
     return {
       code: 0,
@@ -34,4 +99,5 @@ export default {
       data: shopList
     }
   }
+
 }
