@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="category">
-      <div v-for="(item ,index) in categories" :key="index" @click="()=>getProductList(item.value)"
+      <div v-for="(item ,index) in categories" :key="index" @click="()=>handleTabClick(item.value)"
            :class="{active: currentTab === item.value}">
         {{ item.label }}
       </div>
@@ -20,11 +20,11 @@
           </div>
         </div>
         <div class="operation">
-        <span @click="handleReduce" v-if="showReduce">
+        <span @click="handleReduceClick">
           <reduce-one theme="outline" size="20" fill="#333"/>
         </span>
           <span v-if="count>0" class="count">{{ count }}</span>
-          <span @click="handleAdd">
+          <span @click="handleAddClick">
             <add-one theme="outline" size="20" fill="#333"/>
           </span>
         </div>
@@ -34,86 +34,70 @@
 </template>
 
 <script>
+import { reactive, ref, toRefs, watchEffect } from 'vue'
 import { AddOne, ReduceOne } from '@icon-park/vue-next'
-import { reactive, ref, toRefs } from 'vue'
 import { get } from '@/util/request'
 
-const handleProductList = () => {
-  const categories = [
-    {
-      label: '全部商品',
-      value: 'all'
-    },
-    {
-      label: '秒杀',
-      value: 'secKill'
-    },
-    {
-      label: '新鲜水果',
-      value: 'fruit'
-    },
-    {
-      label: '时令蔬菜',
-      value: 'vegetable'
-    },
-    {
-      label: '肉蛋家禽',
-      value: 'meat'
-    }
-  ]
-  const data = reactive({
-    productList: [],
-    currentTab: categories[0].value
-  })
-  const getProductList = (category) => {
-    console.log(category)
-    data.currentTab = category
-    get('/api/shop/product', { category }).then(res => {
-      let data
-      if (category === 'all') {
-        data = res.data
-      } else {
-        data = res.data.filter(item => item.category === category)
-      }
-      productList.value = data
+const categories = [
+  {
+    label: '全部商品',
+    value: 'all'
+  },
+  {
+    label: '秒杀',
+    value: 'secKill'
+  },
+  {
+    label: '新鲜水果',
+    value: 'fruit'
+  },
+  {
+    label: '时令蔬菜',
+    value: 'vegetable'
+  },
+  {
+    label: '肉蛋家禽',
+    value: 'meat'
+  }
+]
+
+const useTabEffect = () => {
+  const currentTab = ref(categories[0].value)
+  const handleTabClick = (tab) => {
+    currentTab.value = tab
+    console.log(tab)
+  }
+  return { currentTab, handleTabClick }
+}
+
+const useCurrentTabListEffect = (tab) => {
+  const data = reactive({ productList: [] })
+  const getProductList = () => {
+    get('/api/shop/product', { tab: tab.value }).then(res => {
+      console.log(res.data)
+      data.productList = res.data
     })
   }
-  const {
-    productList,
-    currentTab
-  } = toRefs(data)
-  return {
-    getProductList,
-    productList,
-    currentTab,
-    categories
-  }
+  watchEffect(() => {
+    getProductList()
+  })
+  const { productList } = toRefs(data)
+  return { productList }
 }
 
-const handleCount = () => {
-  const showReduce = ref(false)
+const useCountEffect = () => {
   const count = ref(0)
-  const handleAdd = () => {
-    console.log('11111')
-    count.value = count.value + 1
-    showReduce.value = true
+  const handleAddClick = () => {
+    count.value++
   }
-  const handleReduce = () => {
-    count.value = count.value - 1
+  const handleReduceClick = () => {
+    count.value--
     if (count.value < 1) {
-      showReduce.value = false
       count.value = 0
     }
-    console.log(count.value)
   }
-  return {
-    handleAdd,
-    handleReduce,
-    showReduce,
-    count
-  }
+  return { count, handleAddClick, handleReduceClick }
 }
-
 export default {
   name: 'Content',
   components: {
@@ -121,31 +105,12 @@ export default {
     ReduceOne
   },
   setup () {
-    const {
-      productList,
-      getProductList,
-      currentTab,
-      categories
-    } = handleProductList()
-
-    getProductList('all')
-
-    const {
-      handleAdd,
-      handleReduce,
-      showReduce,
-      count
-    } = handleCount()
+    const { currentTab, handleTabClick } = useTabEffect()
+    const { productList } = useCurrentTabListEffect(currentTab)
+    const { count, handleAddClick, handleReduceClick } = useCountEffect()
 
     return {
-      productList,
-      handleAdd,
-      handleReduce,
-      showReduce,
-      count,
-      categories,
-      getProductList,
-      currentTab
+      currentTab, handleTabClick, productList, count, handleAddClick, handleReduceClick, categories
     }
   }
 }

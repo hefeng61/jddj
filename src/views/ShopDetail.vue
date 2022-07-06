@@ -3,29 +3,25 @@
     <Search/>
     <Shop :item="item"/>
     <Content/>
+    <Cart/>
   </div>
 
-  <div class="footer">
-    <shopping theme="outline" size="20" fill="#333"/>
-    <span>购物车是空的</span>
-    <div>去结算</div>
-  </div>
 </template>
 
 <script>
 
-import { Shopping } from '@icon-park/vue-next'
 import Shop from '@/components/home/ShopInfo'
 import Content from '@/components/shop/Content'
 import SearchComponent from '@/components/shop/SearchComponent'
+import Cart from '@/components/shop/Cart'
 
 export default {
   name: 'ShopDetail',
   components: {
+    Cart,
     Content,
     Shop,
-    Search: SearchComponent,
-    Shopping
+    Search: SearchComponent
   },
   setup () {
     const item = {
@@ -46,31 +42,5 @@ export default {
 </script>
 
 <style scoped>
-.content {
-  /*padding: 0 18px;*/
-}
-.footer {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 49px;
-  line-height: 49px;
-  background: #FFFFFF;
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid #f1f1f1;
-}
 
-.footer div {
-  height: 100%;
-  width: 98px;
-
-  background: #4FB0F9;
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: #FFFFFF;
-  text-align: center;
-}
 </style>

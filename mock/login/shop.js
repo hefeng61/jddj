@@ -30,7 +30,7 @@ const productList = [
   {
     id: 1,
     name: '番茄250g/份',
-    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/tomato.png',
     sales: 10,
     originalPrice: 33.8,
     price: 32.8,
@@ -39,7 +39,7 @@ const productList = [
   {
     id: 2,
     name: '提子250g/份',
-    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/orange.png',
     sales: 10,
     originalPrice: 33.8,
     price: 32.8,
@@ -48,7 +48,7 @@ const productList = [
   {
     id: 3,
     name: '香蕉250g/份',
-    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/cherry.png',
     sales: 10,
     originalPrice: 33.8,
     price: 32.8,
@@ -57,7 +57,7 @@ const productList = [
   {
     id: 4,
     name: '提子250g/份',
-    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/crab.png',
     sales: 10,
     originalPrice: 13.8,
     price: 32.8,
@@ -66,7 +66,7 @@ const productList = [
   {
     id: 5,
     name: '主体250g/份',
-    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/crab.png',
     sales: 10,
     originalPrice: 33.8,
     price: 32.8,
@@ -75,7 +75,7 @@ const productList = [
   {
     id: 6,
     name: '鸡胸肉250g/份',
-    imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/cherry.png',
     sales: 10,
     originalPrice: 33.8,
     price: 32.8,
@@ -85,11 +85,20 @@ const productList = [
 
 export default {
   'get|/api/shop/product': option => {
-    // productList = productList.filter(item => item.category === option)
+    const url = option.url
+    console.log(url)
+    const param = url.substr(url.lastIndexOf('=') + 1)
+    console.log(param)
+    let list
+    if (param !== 'all') {
+      list = productList.filter(item => item.category === param)
+    } else {
+      list = productList
+    }
     return {
       code: 0,
       status: 200,
-      data: productList
+      data: list
     }
   },
   'get|/api/shop': option => {
