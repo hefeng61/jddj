@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="category">
-      <div v-for="(item ,index) in categories" :key="index" @click="()=>getProductList(item.value)"
+      <div v-for="(item ,index) in categories" :key="index" @click="()=>handleTabClick(item.value)"
            :class="{active: currentTab === item.value}">
         {{ item.label }}
       </div>
@@ -35,59 +35,62 @@
 
 <script>
 import { AddOne, ReduceOne } from '@icon-park/vue-next'
-import { reactive, ref, toRefs } from 'vue'
+import { reactive, ref, toRefs, watchEffect } from 'vue'
 import { get } from '@/util/request'
 
-const handleProductList = () => {
-  const categories = [
-    {
-      label: '全部商品',
-      value: 'all'
-    },
-    {
-      label: '秒杀',
-      value: 'secKill'
-    },
-    {
-      label: '新鲜水果',
-      value: 'fruit'
-    },
-    {
-      label: '时令蔬菜',
-      value: 'vegetable'
-    },
-    {
-      label: '肉蛋家禽',
-      value: 'meat'
-    }
-  ]
-  const data = reactive({
-    productList: [],
-    currentTab: categories[0].value
-  })
+const categories = [
+  {
+    label: '全部商品',
+    value: 'all'
+  },
+  {
+    label: '秒杀',
+    value: 'secKill'
+  },
+  {
+    label: '新鲜水果',
+    value: 'fruit'
+  },
+  {
+    label: '时令蔬菜',
+    value: 'vegetable'
+  },
+  {
+    label: '肉蛋家禽',
+    value: 'meat'
+  }
+]
+const useTabEffect = () => {
+  const currentTab = ref(categories[0].value)
+  const handleTabClick = (tab) => {
+    currentTab.value = tab
+  }
+  return {
+    handleTabClick,
+    currentTab
+  }
+}
+
+const useCurrentListEffect = (tab) => {
+  const data = reactive({ productList: [] })
   const getProductList = (category) => {
-    console.log(category)
-    data.currentTab = category
-    get('/api/shop/product', { category }).then(res => {
+    get('/api/shop/product', { tab }).then(res => {
       let data
       if (category === 'all') {
         data = res.data
       } else {
         data = res.data.filter(item => item.category === category)
       }
-      productList.value = data
+      data.productList = data
     })
   }
-  const {
-    productList,
-    currentTab
-  } = toRefs(data)
-  return {
-    getProductList,
-    productList,
-    currentTab,
-    categories
-  }
+
+  watchEffect(() => {
+    getProductList()
+  })
+
+  const { productList } = toRefs(data)
+  return { productList }
 }
 
 const handleCount = () => {
@@ -120,22 +123,12 @@ export default {
     AddOne,
     ReduceOne
   },
+
   setup () {
-    const {
-      productList,
-      getProductList,
-      currentTab,
-      categories
-    } = handleProductList()
+    const { handleTabClick, currentTab } = useTabEffect()
+    const { productList } = useCurrentListEffect(currentTab)
 
-    getProductList('all')
-
-    const {
-      handleAdd,
-      handleReduce,
-      showReduce,
-      count
-    } = handleCount()
+    const { handleAdd, handleReduce, showReduce, count } = handleCount()
 
     return {
       productList,
@@ -144,8 +137,8 @@ export default {
       showReduce,
       count,
       categories,
-      getProductList,
-      currentTab
+      currentTab,
+      handleTabClick
     }
   }
 }
