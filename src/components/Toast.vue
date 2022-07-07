@@ -15,7 +15,6 @@ export const handleToastEffect = () => {
     msg: ''
   })
   const showToast = (message) => {
-    console.log(message)
     toastData.showToast = true
     toastData.msg = message
     setTimeout(() => {

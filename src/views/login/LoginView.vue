@@ -45,22 +45,12 @@ export default {
     } = handleToastEffect()
     const handleLogin = async () => {
       const res = await get('/api/login', { ...form })
-      console.log(res)
       if (res.code === 0) {
         localStorage.setItem('isLogin', true)
         router.push({ path: '/' })
       } else {
         showToast('登陆失败')
       }
-      // res.then(res => {
-      //   console.log(res)
-      //   if (res.code === 0) {
-      //     localStorage.setItem('isLogin', true)
-      //     router.push({ path: '/' })
-      //   } else {
-      //     showToast('登陆失败')
-      //   }
-      // })
     }
 
     const handleRegister = () => {

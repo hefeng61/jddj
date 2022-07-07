@@ -20,11 +20,11 @@
           </div>
         </div>
         <div class="operation">
-        <span @click="handleReduceClick">
+        <span @click="changeItemToCart(shopId,item.id,item,-1)">
           <reduce-one theme="outline" size="20" fill="#333"/>
         </span>
-          <span v-if="count>0" class="count">{{ count }}</span>
-          <span @click="handleAddClick">
+          <span class="total">{{ cartList?.[shopId]?.[item.id]?.count || 0 }}</span>
+          <span @click="changeItemToCart(shopId,item.id,item,1)">
             <add-one theme="outline" size="20" fill="#333"/>
           </span>
         </div>
@@ -37,6 +37,8 @@
 import { reactive, ref, toRefs, watchEffect } from 'vue'
 import { AddOne, ReduceOne } from '@icon-park/vue-next'
 import { get } from '@/util/request'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 const categories = [
   {
@@ -65,16 +67,17 @@ const useTabEffect = () => {
   const currentTab = ref(categories[0].value)
   const handleTabClick = (tab) => {
     currentTab.value = tab
-    console.log(tab)
   }
-  return { currentTab, handleTabClick }
+  return {
+    currentTab,
+    handleTabClick
+  }
 }
 
 const useCurrentTabListEffect = (tab) => {
   const data = reactive({ productList: [] })
   const getProductList = () => {
     get('/api/shop/product', { tab: tab.value }).then(res => {
-      console.log(res.data)
       data.productList = res.data
     })
   }
@@ -84,19 +87,25 @@ const useCurrentTabListEffect = (tab) => {
   const { productList } = toRefs(data)
   return { productList }
 }
-
-const useCountEffect = () => {
-  const count = ref(0)
-  const handleAddClick = () => {
-    count.value++
+const useCartEffect = () => {
+  const store = useStore()
+  const { cartList } = toRefs(store.state)
+  // debugger
+  const route = useRoute()
+  const shopId = route.params.id
+  const changeItemToCart = (shopId, productId, product, num) => {
+    store.commit('changeItemToCart', {
+      shopId,
+      productId,
+      product,
+      num
+    })
   }
-  const handleReduceClick = () => {
-    count.value--
-    if (count.value < 1) {
-      count.value = 0
-    }
+  return {
+    cartList,
+    shopId,
+    changeItemToCart
   }
-  return { count, handleAddClick, handleReduceClick }
 }
 export default {
   name: 'Content',
@@ -105,12 +114,25 @@ export default {
     ReduceOne
   },
   setup () {
-    const { currentTab, handleTabClick } = useTabEffect()
+    const {
+      currentTab,
+      handleTabClick
+    } = useTabEffect()
     const { productList } = useCurrentTabListEffect(currentTab)
-    const { count, handleAddClick, handleReduceClick } = useCountEffect()
+    const {
+      shopId,
+      cartList,
+      changeItemToCart
+    } = useCartEffect()
 
     return {
-      currentTab, handleTabClick, productList, count, handleAddClick, handleReduceClick, categories
+      currentTab,
+      handleTabClick,
+      productList,
+      shopId,
+      cartList,
+      categories,
+      changeItemToCart
     }
   }
 }
@@ -152,10 +174,7 @@ export default {
 
 .product {
   display: flex;
-  /*justify-content: space-evenly;*/
   border-bottom: 1px solid #f1f1f1;
-  /*margin: 12px 0;*/
-  /*padding: 12px 0;*/
 }
 
 .product_name {
@@ -208,7 +227,7 @@ export default {
   padding-right: 18px;
 }
 
-.count {
+.total {
   display: block;
   width: 20px;
   text-align: center;

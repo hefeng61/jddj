@@ -86,9 +86,7 @@ const productList = [
 export default {
   'get|/api/shop/product': option => {
     const url = option.url
-    console.log(url)
     const param = url.substr(url.lastIndexOf('=') + 1)
-    console.log(param)
     let list
     if (param !== 'all') {
       list = productList.filter(item => item.category === param)
