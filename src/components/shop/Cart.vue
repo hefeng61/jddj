@@ -4,50 +4,68 @@
       <img src="../../../src/assets/basket.png">
       <span class="count">{{ total }}</span>
     </div>
-    <span class="price">总计：￥128</span>
+    <span class="price">总计：￥{{ price }}</span>
     <div class="balance">去结算</div>
   </div>
+
 </template>
 
 <script>
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed, toRefs } from 'vue'
+import { computed } from 'vue'
+import ProductDetail from '@/components/shop/ProductDetail'
 
 const useCartEffect = () => {
   const route = useRoute()
   const store = useStore()
-  debugger
   const shopId = route.params.id
-  // const { cartList } = toRefs(store.state)
-  // const cartList = store.state.cartList
-  // const { cartList } = toRefs(store.state)
-  // const productList = cartList[shopId]
-  // console.log(shopId, cartList)
   const total = computed(() => {
-    debugger
     const cartList = store.state.cartList
-    // const { cartList } = toRefs(store.state)
     const productList = cartList[shopId]
-    console.log(productList)
-    console.log(shopId, cartList)
     let count = 0
     if (productList) {
       for (const i in productList) {
         const product = productList[i]
-        console.log(product, i)
         count += product.count
       }
     }
     return count
   })
-  return total
+  const price = computed(() => {
+    const cartList = store.state.cartList
+    const productList = cartList[shopId]
+    let count = 0
+    if (productList) {
+      for (const i in productList) {
+        const product = productList[i]
+        count += (product.count * product.price)
+      }
+    }
+    return count.toFixed(2)
+  })
+  const productList = computed(() => {
+    const cartList = store.state.cartList
+    const productList = cartList[shopId] || []
+    console.log(productList)
+    return productList
+  })
+
+  // const productList = () => {
+  //   const cartList = store.state.cartList
+  //   const productList = cartList[shopId] || []
+  //   console.log(productList)
+  //   return productList
+  // }
+  return { total, price, productList }
 }
+
 export default {
   name: 'Cart',
+  components: { ProductDetail },
   setup () {
-    const total = useCartEffect()
-    return { total }
+    const { total, price, productList } = useCartEffect()
+    return { total, price, productList }
   }
 }
 </script>
@@ -95,7 +113,6 @@ export default {
 
 .footer .price {
   display: block;
-  width: 110px;
 }
 
 .footer .balance {
@@ -108,5 +125,13 @@ export default {
   text-align: center;
   position: absolute;
   right: 0;
+}
+
+.product {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+  height: 50px;
 }
 </style>
