@@ -20,11 +20,11 @@
           </div>
         </div>
         <div class="operation">
-        <span @click="handleReduce" v-if="showReduce">
+        <span @click="handleReduceClick">
           <reduce-one theme="outline" size="20" fill="#333"/>
         </span>
           <span v-if="count>0" class="count">{{ count }}</span>
-          <span @click="handleAdd">
+          <span @click="handleAddClick">
             <add-one theme="outline" size="20" fill="#333"/>
           </span>
         </div>
@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import { AddOne, ReduceOne } from '@icon-park/vue-next'
 import { reactive, ref, toRefs, watchEffect } from 'vue'
+import { AddOne, ReduceOne } from '@icon-park/vue-next'
 import { get } from '@/util/request'
 
 const categories = [
@@ -60,85 +60,57 @@ const categories = [
     value: 'meat'
   }
 ]
+
 const useTabEffect = () => {
   const currentTab = ref(categories[0].value)
   const handleTabClick = (tab) => {
     currentTab.value = tab
+    console.log(tab)
   }
-  return {
-    handleTabClick,
-    currentTab
-  }
+  return { currentTab, handleTabClick }
 }
 
-const useCurrentListEffect = (tab) => {
+const useCurrentTabListEffect = (tab) => {
   const data = reactive({ productList: [] })
-  const getProductList = (category) => {
-    get('/api/shop/product', { tab }).then(res => {
-      let data
-      if (category === 'all') {
-        data = res.data
-      } else {
-        data = res.data.filter(item => item.category === category)
-      }
-      data.productList = data
+  const getProductList = () => {
+    get('/api/shop/product', { tab: tab.value }).then(res => {
+      console.log(res.data)
+      data.productList = res.data
     })
   }
-
   watchEffect(() => {
     getProductList()
   })
-
   const { productList } = toRefs(data)
   return { productList }
 }
 
-const handleCount = () => {
-  const showReduce = ref(false)
+const useCountEffect = () => {
   const count = ref(0)
-  const handleAdd = () => {
-    console.log('11111')
-    count.value = count.value + 1
-    showReduce.value = true
+  const handleAddClick = () => {
+    count.value++
   }
-  const handleReduce = () => {
-    count.value = count.value - 1
+  const handleReduceClick = () => {
+    count.value--
     if (count.value < 1) {
-      showReduce.value = false
       count.value = 0
     }
-    console.log(count.value)
   }
-  return {
-    handleAdd,
-    handleReduce,
-    showReduce,
-    count
-  }
+  return { count, handleAddClick, handleReduceClick }
 }
-
 export default {
   name: 'Content',
   components: {
     AddOne,
     ReduceOne
   },
-
   setup () {
-    const { handleTabClick, currentTab } = useTabEffect()
-    const { productList } = useCurrentListEffect(currentTab)
-
-    const { handleAdd, handleReduce, showReduce, count } = handleCount()
+    const { currentTab, handleTabClick } = useTabEffect()
+    const { productList } = useCurrentTabListEffect(currentTab)
+    const { count, handleAddClick, handleReduceClick } = useCountEffect()
 
     return {
-      productList,
-      handleAdd,
-      handleReduce,
-      showReduce,
-      count,
-      categories,
-      currentTab,
-      handleTabClick
+      currentTab, handleTabClick, productList, count, handleAddClick, handleReduceClick, categories
     }
   }
 }
