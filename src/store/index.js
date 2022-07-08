@@ -31,12 +31,38 @@ export default createStore({
         productInfo.count = 0
       }
       productInfo.count += num
+      if (productInfo.count > 0) {
+        productInfo.checked = true
+      }
       if (productInfo.count < 0) {
         productInfo.count = 0
       }
       shopInfo[productId] = productInfo
       state.cartList[shopId] = shopInfo
       console.log(state.cartList)
+    },
+    changeItemChecked (state, payload) {
+      const {
+        shopId,
+        productId
+      } = payload
+      console.log(shopId, productId)
+      const shopInfo = state.cartList[shopId]
+      const product = shopInfo[productId]
+      console.log(product)
+      product.checked = !product.checked
+    },
+    clearCartItem (state, payload) {
+      const { shopId } = payload
+      state.cartList[shopId] = {}
+    },
+    changeItemAllChecked (state, payload) {
+      const { shopId } = payload
+      const productList = state.cartList[shopId]
+      for (const i in productList) {
+        const product = productList[i]
+        product.checked = !product.checked
+      }
     }
   },
   actions: {},
