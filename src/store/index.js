@@ -47,9 +47,7 @@ export default createStore({
         productId
       } = payload
       console.log(shopId, productId)
-      const shopInfo = state.cartList[shopId]
-      const product = shopInfo[productId]
-      console.log(product)
+      const product = state.cartList[shopId][productId]
       product.checked = !product.checked
     },
     clearCartItem (state, payload) {
@@ -57,11 +55,16 @@ export default createStore({
       state.cartList[shopId] = {}
     },
     changeItemAllChecked (state, payload) {
-      const { shopId } = payload
+      const {
+        shopId,
+        allChecked
+      } = payload
       const productList = state.cartList[shopId]
       for (const i in productList) {
         const product = productList[i]
-        product.checked = !product.checked
+        if (product.checked !== allChecked.value) {
+          product.checked = allChecked.value
+        }
       }
     }
   },

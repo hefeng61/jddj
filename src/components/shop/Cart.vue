@@ -114,6 +114,7 @@ const useCartEffect = () => {
   const route = useRoute()
   const shopId = route.params.id
 
+  const allChecked = ref(true)
   const changeItemToCart = (shopId, productId, product, num) => {
     store.commit('changeItemToCart', {
       shopId,
@@ -125,18 +126,20 @@ const useCartEffect = () => {
   const clearCart = (shopId) => {
     store.commit('clearCartItem', { shopId })
   }
-
   const changeItemAllChecked = (shopId) => {
-    const allChecked = ref(true)
-    console.log(allChecked)
+    console.log(allChecked.value)
     allChecked.value = !allChecked.value
-    console.log(allChecked)
-    store.commit('changeItemAllChecked', { shopId })
-    return allChecked
+    console.log(allChecked.value)
+    store.commit('changeItemAllChecked', {
+      shopId,
+      allChecked
+    })
+    // return allChecked
   }
   return {
     clearCart,
     shopId,
+    allChecked,
     changeItemToCart,
     changeItemAllChecked
   }
@@ -160,10 +163,10 @@ export default {
     const {
       clearCart,
       shopId,
+      allChecked,
       changeItemToCart,
       changeItemAllChecked
     } = useCartEffect()
-    const { allChecked } = changeItemAllChecked()
     return {
       total,
       price,
