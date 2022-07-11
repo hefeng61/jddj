@@ -4,6 +4,7 @@ import IndexView from '@/views/IndexView'
 import Mine from '@/views/Mine'
 import RegisterView from '@/views/login/RegisterView'
 import ShopDetail from '@/views/ShopDetail'
+import ConfirmOrder from '@/views/ConfirmOrder'
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: '/detail/:id',
     name: 'ShopDetail',
     component: ShopDetail
+  },
+  {
+    path: '/confirmOrder',
+    name: 'confirm',
+    component: ConfirmOrder
   }
 ]
 

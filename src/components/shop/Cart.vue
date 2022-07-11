@@ -1,6 +1,8 @@
 <template>
+  <div class="mask" v-if="showMask"></div>
   <div class="cart">
-    <div class="allCheck" v-if="total>0">
+    <div v-if="showCart">
+      <div class="allCheck" v-if="total>0">
       <span>
         <span @click="()=>{changeItemAllChecked(shopId,allChecked)}">
           <check-one theme="multi-color" size="20" :fill="['#333' ,'#2F88FF' ,'#FFF' ,'#43CCF8']" v-if="allChecked"/>
@@ -9,39 +11,40 @@
         </span>
         <span style="margin-left: 10px">全选</span>
       </span>
-      <span class="clearCart" @click="()=> clearCart(shopId)">清空购物车</span>
-    </div>
-    <template v-for="item in list" :key="item.id">
+        <span class="clearCart" @click="()=> clearCart(shopId)">清空购物车</span>
+      </div>
+      <template v-for="item in list" :key="item.id">
 
-      <div class="product" v-if="item.count>0">
+        <div class="product" v-if="item.count>0">
         <span class="select_item" @click="()=>{changeItemChecked(shopId,item.id)}">
           <check-one theme="multi-color" size="20" :fill="['#333' ,'#2F88FF' ,'#FFF' ,'#43CCF8']" v-if="item.checked"/>
           <round theme="outline" size="20" fill="#333" strokeLinejoin="miter" strokeLinecap="square"
                  v-if="!item.checked"/>
       </span>
-        <div class="img">
-          <img :src="item.imgUrl">
-        </div>
-        <div class="detail">
-          <div class="product_name">{{ item.name }}</div>
-          <div>
-            <span class="price">{{ item.price }}</span>
-            <span class="original_price">{{ item.originalPrice }}</span>
+          <div class="img">
+            <img :src="item.imgUrl">
           </div>
-        </div>
-        <div class="operation">
+          <div class="detail">
+            <div class="product_name">{{ item.name }}</div>
+            <div>
+              <span class="price">{{ item.price }}</span>
+              <span class="original_price">{{ item.originalPrice }}</span>
+            </div>
+          </div>
+          <div class="operation">
         <span @click="changeItemToCart(shopId,item.id,item,-1)">
           <reduce-one theme="outline" size="20" fill="#333"/>
         </span>
-          <span class="total">{{ item.count || 0 }}</span>
-          <span @click="changeItemToCart(shopId,item.id,item,1)">
+            <span class="total">{{ item.count || 0 }}</span>
+            <span @click="changeItemToCart(shopId,item.id,item,1)">
             <add-one theme="outline" size="20" fill="#333"/>
           </span>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
     <div class="footer">
-      <div class="icon">
+      <div class="icon" @click="handleCartClick">
         <img src="../../../src/assets/basket.png">
         <span class="count">{{ total }}</span>
       </div>
@@ -100,6 +103,7 @@ const useCartDetailEffect = () => {
       productId
     })
   }
+
   return {
     total,
     price,
@@ -167,6 +171,28 @@ export default {
       changeItemToCart,
       changeItemAllChecked
     } = useCartEffect()
+
+    const showCart = ref(false)
+
+    const showMask = computed(() => {
+      console.log(total.value)
+      let flag = false
+      if (total.value > 0 || showCart.value === true) {
+        flag = true
+      }
+      if (showCart.value === false || total.value < 1) {
+        flag = false
+      }
+      return flag
+    })
+
+    const handleCartClick = () => {
+      console.log(total.value)
+      if (total.value > 0) {
+        showCart.value = !showCart.value
+        // showMask.value = !showMask.value
+      }
+    }
     return {
       total,
       price,
@@ -176,18 +202,32 @@ export default {
       clearCart,
       shopId,
       changeItemToCart,
-      changeItemAllChecked
+      changeItemAllChecked,
+      showCart,
+      handleCartClick,
+      showMask
     }
   }
 }
 </script>
 
 <style scoped>
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
 .cart {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 2;
 }
 
 .allCheck {
