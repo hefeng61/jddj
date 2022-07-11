@@ -25,10 +25,11 @@
     </div>
     <div class="shop_info">
       <div class="shop">
-        <div>沃尔玛</div>
-        <div style="display: flex;justify-content: space-between">
+        <div style="padding-bottom: 16px">沃尔玛</div>
+        <div style="display: flex;justify-content: space-between;padding-bottom: 16px">
           <div style="display: flex">
-            <img src="http://www.dell-lee.com/imgs/vue3/tomato.png" style="width: 46px; height: 46px">
+            <img src="http://www.dell-lee.com/imgs/vue3/tomato.png"
+                 style="width: 46px; height: 46px;padding-right: 16px">
             <div>
               <span>番茄250g/份</span>
               <span style="display: block">¥33.6 x 3</span>
@@ -37,6 +38,25 @@
           <div>
             &yen;99.9
           </div>
+        </div>
+        <div style="display: flex;justify-content: space-between;padding-bottom: 16px">
+          <div style="display: flex">
+            <img src="http://www.dell-lee.com/imgs/vue3/tomato.png"
+                 style="width: 46px; height: 46px;padding-right: 16px">
+            <div>
+              <span>番茄250g/份</span>
+              <span style="display: block">¥33.6 x 3</span>
+            </div>
+          </div>
+          <div>
+            &yen;99.9
+          </div>
+        </div>
+        <div class="total_count">
+          <span>共计3件/1.4kg</span>
+          <span>
+            <down theme="outline" size="24" fill="#999999" strokeLinejoin="miter" strokeLinecap="square"/>
+          </span>
         </div>
       </div>
     </div>
@@ -50,13 +70,14 @@
 </template>
 
 <script>
-import { Left, Right } from '@icon-park/vue-next'
+import { Left, Right, Down } from '@icon-park/vue-next'
 
 export default {
   name: 'ConfirmOrder',
   components: {
     Left,
-    Right
+    Right,
+    Down
   }
 }
 </script>
@@ -143,17 +164,33 @@ export default {
 .next {
   position: absolute;
   right: 34px;
+  top: 132px
 }
 
 .shop_info {
   padding: 0 18px;
   margin-top: 16px;
+  /*box-sizing: border-box;*/
 }
 
 .shop {
   height: 222px;
   background: #fff;
   padding: 16px;
+  box-sizing: border-box;
+}
+
+.total_count {
+  width: 307px;
+  height: 28px;
+  background: #F5F5F5;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: PingFangSC-Light;
+  font-size: 14px;
+  color: #999999;
 }
 
 .footer {
