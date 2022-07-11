@@ -20,11 +20,11 @@
           </div>
         </div>
         <div class="operation">
-        <span @click="changeItemToCart(shopId,item.id,item,-1)">
+        <span @click="changeItemToCart(shopId,item.id,item,-1,shopName)">
           <reduce-one theme="outline" size="20" fill="#333"/>
         </span>
-          <span class="total">{{ cartList?.[shopId]?.[item.id]?.count || 0 }}</span>
-          <span @click="changeItemToCart(shopId,item.id,item,1)">
+          <span class="total">{{ cartList?.[shopId] ?. productList[item.id]?.count || 0 }}</span>
+          <span @click="changeItemToCart(shopId,item.id,item,1,shopName)">
             <add-one theme="outline" size="20" fill="#333"/>
           </span>
         </div>
@@ -35,10 +35,10 @@
 
 <script>
 import { reactive, ref, toRefs, watchEffect } from 'vue'
-import { AddOne, ReduceOne } from '@icon-park/vue-next'
 import { get } from '@/util/request'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { AddOne, ReduceOne } from '@icon-park/vue-next'
 
 const categories = [
   {
@@ -90,15 +90,15 @@ const useCurrentTabListEffect = (tab) => {
 const useCartEffect = () => {
   const store = useStore()
   const { cartList } = toRefs(store.state)
-  // debugger
   const route = useRoute()
   const shopId = route.params.id
-  const changeItemToCart = (shopId, productId, product, num) => {
+  const changeItemToCart = (shopId, productId, product, num, shopName) => {
     store.commit('changeItemToCart', {
       shopId,
       productId,
       product,
-      num
+      num,
+      shopName
     })
   }
   return {
@@ -109,10 +109,8 @@ const useCartEffect = () => {
 }
 export default {
   name: 'Content',
-  components: {
-    AddOne,
-    ReduceOne
-  },
+  props: ['shopName'],
+  components: { AddOne, ReduceOne },
   setup () {
     const {
       currentTab,

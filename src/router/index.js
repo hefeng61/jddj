@@ -5,6 +5,7 @@ import Mine from '@/views/Mine'
 import RegisterView from '@/views/login/RegisterView'
 import ShopDetail from '@/views/ShopDetail'
 import ConfirmOrder from '@/views/ConfirmOrder'
+import Cart from '@/components/shop/Cart'
 
 const routes = [
   {
@@ -44,6 +45,10 @@ const routes = [
     path: '/confirmOrder',
     name: 'confirm',
     component: ConfirmOrder
+  }, {
+    path: '/cart',
+    name: 'cart',
+    component: Cart
   }
 ]
 

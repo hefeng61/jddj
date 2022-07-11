@@ -2,7 +2,7 @@
   <div class="content">
     <Search/>
     <Shop :item="item"/>
-    <Content/>
+    <Content :shopName="item.name"/>
     <Cart/>
   </div>
 

@@ -17,27 +17,12 @@
 export default {
   name: 'Shop',
   props: ['item']
-  // setup () {
-  //   const {
-  //     shopList,
-  //     getShopList
-  //   } = handleShopInfo()
-  //
-  //   getShopList()
-  //
-  //   return {
-  //     shopList,
-  //     getShopList
-  //   }
-  // }
-
 }
 </script>
 
 <style scoped>
 .shop {
   display: flex;
-  /*padding-bottom: 12px;*/
   padding: 0 18px;
 }
 

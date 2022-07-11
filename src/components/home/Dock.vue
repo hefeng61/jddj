@@ -1,29 +1,37 @@
 <template>
   <div class="docker">
+    <router-link to="{name: Home}">
       <span class="docker_item" @click="handleClick('home')">
         <div>
           <home theme="outline" size="20" fill="#333"/>
         </div>
         <span>首页</span>
       </span>
-    <span class="docker_item" @click="handleClick('cart')">
+    </router-link>
+<!--    <router-link to="/cart">-->
+      <span class="docker_item" @click="handleClick('cart')">
       <div>
           <shopping theme="outline" size="20" fill="#333"/>
         </div>
         <span>购物车</span>
     </span>
-    <span class="docker_item" @click="handleClick('order')">
+<!--    </router-link>-->
+    <router-link to="">
+       <span class="docker_item" @click="handleClick('order')">
         <div>
           <order theme="outline" size="20" fill="#333"/>
         </div>
         <span>订单</span>
       </span>
-    <span class="docker_item" @click="handleClick('mine')">
+    </router-link>
+   <router-link to="">
+     <span class="docker_item" @click="handleClick('mine')">
         <div>
           <user theme="outline" size="20" fill="#333"/>
         </div>
         <span>我的</span>
     </span>
+   </router-link>
   </div>
 </template>
 
