@@ -93,6 +93,7 @@ const useCartEffect = () => {
   const route = useRoute()
   const shopId = route.params.id
   const changeItemToCart = (shopId, productId, product, num, shopName) => {
+    console.log('shopName', shopName)
     store.commit('changeItemToCart', {
       shopId,
       productId,
@@ -111,7 +112,8 @@ export default {
   name: 'Content',
   props: ['shopName'],
   components: { AddOne, ReduceOne },
-  setup () {
+  setup (props) {
+    console.log('shopName-content', props.shopName)
     const {
       currentTab,
       handleTabClick

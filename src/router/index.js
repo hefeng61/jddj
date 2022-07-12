@@ -39,12 +39,12 @@ const routes = [
   {
     path: '/detail/:id',
     name: 'ShopDetail',
-    component: ShopDetail
+    component: () => import('@/views/ShopDetail')
   },
   {
-    path: '/confirmOrder',
+    path: '/confirmOrder/:id',
     name: 'confirm',
-    component: ConfirmOrder
+    component: () => import('@/views/ConfirmOrder')
   }, {
     path: '/cart',
     name: 'cart',

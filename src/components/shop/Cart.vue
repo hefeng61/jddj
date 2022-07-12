@@ -32,11 +32,11 @@
             </div>
           </div>
           <div class="operation">
-        <span @click="changeItemToCart(shopId,item.id,item,-1)">
+        <span @click="changeItemToCart(shopId,item.id,item,-1,shopName)">
           <reduce-one theme="outline" size="20" fill="#333"/>
         </span>
             <span class="total">{{ item.count || 0 }}</span>
-            <span @click="changeItemToCart(shopId,item.id,item,1)">
+            <span @click="changeItemToCart(shopId,item.id,item,1,shopName)">
             <add-one theme="outline" size="20" fill="#333"/>
           </span>
           </div>
@@ -49,26 +49,29 @@
         <span class="count">{{ total }}</span>
       </div>
       <div class="price">总计：￥{{ price }}</div>
+      <router-link :to="'/confirmOrder/'+shopId">
       <div class="balance">去结算</div>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed, ref } from 'vue'
+import { computed, ref, toRefs } from 'vue'
 import { AddOne, ReduceOne, CheckOne, Round } from '@icon-park/vue-next'
 
 const useCartDetailEffect = () => {
   const route = useRoute()
   const store = useStore()
   const shopId = route.params.id
-  const cartList = store.state.cartList
-  // const { cartList } = toRefs(store.state)
 
   const total = computed(() => {
-    const productList = cartList[shopId]?.productList
+    // const cartList = store.state.cartList
+    const { cartList } = toRefs(store.state)
+    console.log('leixing', cartList.value)
+    const productList = cartList.value[shopId]?.productList
     let count = 0
     if (productList) {
       for (const i in productList) {
@@ -79,6 +82,7 @@ const useCartDetailEffect = () => {
     return count
   })
   const price = computed(() => {
+    const cartList = store.state.cartList
     const productList = cartList[shopId]?.productList
     let count = 0
     if (productList) {
@@ -92,9 +96,10 @@ const useCartDetailEffect = () => {
     return count.toFixed(2)
   })
   const list = computed(() => {
-    debugger
     const cartList = store.state.cartList
-    return cartList[shopId].productList || {}
+    const productList = cartList[shopId]?.productList
+    console.log(productList)
+    return productList || {}
   })
 
   const changeItemChecked = (shopId, productId) => {
@@ -119,12 +124,13 @@ const useCartEffect = () => {
   const shopId = route.params.id
 
   const allChecked = ref(true)
-  const changeItemToCart = (shopId, productId, product, num) => {
+  const changeItemToCart = (shopId, productId, product, num, shopName) => {
     store.commit('changeItemToCart', {
       shopId,
       productId,
       product,
-      num
+      num,
+      shopName
     })
   }
   const clearCart = (shopId) => {
@@ -150,6 +156,7 @@ const useCartEffect = () => {
 }
 export default {
   name: 'Cart',
+  props: ['shopName'],
   components: {
     AddOne,
     ReduceOne,
@@ -163,7 +170,7 @@ export default {
       list,
       changeItemChecked
     } = useCartDetailEffect()
-
+    console.log(total, price, list)
     const {
       clearCart,
       shopId,
@@ -190,9 +197,13 @@ export default {
       console.log(total.value)
       if (total.value > 0) {
         showCart.value = !showCart.value
-        // showMask.value = !showMask.value
       }
     }
+
+    // const handleOrderConfirm = (shopId) => {
+    //   const router = useRouter()
+    //   router.push({ path: `/orderConfirm/${shopId}` })
+    // }
     return {
       total,
       price,
@@ -206,6 +217,7 @@ export default {
       showCart,
       handleCartClick,
       showMask
+      // handleOrderConfirm
     }
   }
 }

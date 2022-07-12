@@ -80,6 +80,24 @@ const productList = [
     originalPrice: 33.8,
     price: 32.8,
     category: 'meat'
+  },
+  {
+    id: 7,
+    name: '鸭腿肉250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/cherry.png',
+    sales: 10,
+    originalPrice: 13.8,
+    price: 14.8,
+    category: 'meat'
+  },
+  {
+    id: 8,
+    name: '鸭腿肉250g/份',
+    imgUrl: 'http://www.dell-lee.com/imgs/vue3/cherry.png',
+    sales: 10,
+    originalPrice: 13.8,
+    price: 14.8,
+    category: 'meat'
   }
 ]
 

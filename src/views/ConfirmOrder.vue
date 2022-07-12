@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="personal_info">
       <div class="header">
-        <span class="back">
+        <span class="back" @click="handleBack">
           <left theme="filled" size="24" fill="#ffffff" strokeLinejoin="miter" strokeLinecap="square"/>
         </span>
         <span class="title">确认订单</span>
@@ -25,34 +25,25 @@
     </div>
     <div class="shop_info">
       <div class="shop">
-        <div style="padding-bottom: 16px">沃尔玛</div>
-        <div style="display: flex;justify-content: space-between;padding-bottom: 16px">
-          <div style="display: flex">
-            <img src="http://www.dell-lee.com/imgs/vue3/tomato.png"
-                 style="width: 46px; height: 46px;padding-right: 16px">
+        <div style="padding-bottom: 16px">{{ shopName }}</div>
+        <div :class="divHeight">
+        <template v-for="item in productList" :key="item.id" >
+          <div style="display: flex;justify-content: space-between;padding-bottom: 16px;" v-if="item.count>0">
+            <div style="display: flex">
+              <img :src="item.imgUrl"
+                   style="width: 46px; height: 46px;padding-right: 16px">
+              <div>
+                <span>{{ item.name }}</span>
+                <span style="display: block">&yen;{{ item.price }} x {{ item.count }}</span>
+              </div>
+            </div>
             <div>
-              <span>番茄250g/份</span>
-              <span style="display: block">¥33.6 x 3</span>
+              &yen;{{ (item.price * item.count).toFixed(2) }}
             </div>
           </div>
-          <div>
-            &yen;99.9
-          </div>
+        </template>
         </div>
-        <div style="display: flex;justify-content: space-between;padding-bottom: 16px">
-          <div style="display: flex">
-            <img src="http://www.dell-lee.com/imgs/vue3/tomato.png"
-                 style="width: 46px; height: 46px;padding-right: 16px">
-            <div>
-              <span>番茄250g/份</span>
-              <span style="display: block">¥33.6 x 3</span>
-            </div>
-          </div>
-          <div>
-            &yen;99.9
-          </div>
-        </div>
-        <div class="total_count">
+        <div class="total_count" @click="handleCountClick">
           <span>共计3件/1.4kg</span>
           <span>
             <down theme="outline" size="24" fill="#999999" strokeLinejoin="miter" strokeLinecap="square"/>
@@ -61,7 +52,7 @@
       </div>
     </div>
     <div class="footer">
-      <div class="price">实付金额 &yen;624</div>
+      <div class="price">实付金额 &yen;{{ totalPrice }}</div>
       <div class="submit_btn">
         提交订单
       </div>
@@ -71,20 +62,85 @@
 
 <script>
 import { Left, Right, Down } from '@icon-park/vue-next'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { computed, reactive, ref } from 'vue'
+// import { computed, toRefs } from 'vue'
 
+const userCartListEffect = () => {
+  const route = useRoute()
+  const shopId = route.params.id
+  const store = useStore()
+  // const cartList = toRefs(store.state)
+  // console.log(cartList)
+  // const productList = computed(() => {
+  //   const cartList = store.state.cartList
+  //   const productList = cartList[shopId]?.productList || []
+  //   return productList
+  // })
+  const productList = store.state.cartList[shopId]?.productList || []
+  const shopName = store.state.cartList[shopId]?.shopName || ''
+  const totalPrice = computed(() => {
+    let total = 0
+    // productList.forEach(item => {
+    //   total += item.price * item.count
+    // })
+    // return total.toFixed(2)
+    for (const i in productList) {
+      const product = productList[i]
+      total += product.price * product.count
+    }
+    return total.toFixed(2)
+  })
+  return {
+    productList,
+    shopName,
+    totalPrice
+  }
+}
+const useCountEffect = () => {
+  const divHeight = reactive({
+    'max-height': '124px',
+    'overflow-y': 'hidden'
+  })
+  const handleCountClick = () => {
+
+  }
+  return { divHeight, handleCountClick }
+}
 export default {
   name: 'ConfirmOrder',
   components: {
     Left,
     Right,
     Down
+  },
+  setup () {
+    const {
+      productList,
+      shopName,
+      totalPrice
+
+    } = userCartListEffect()
+
+    const handleBack = () => {
+      window.history.back()
+    }
+    const { divHeight, handleCountClick } = useCountEffect()
+    return {
+      productList,
+      shopName,
+      handleBack,
+      totalPrice,
+      divHeight,
+      handleCountClick
+    }
   }
 }
 </script>
 
 <style scoped>
 .wrapper {
-  /*padding: 0 18px;*/
   background: #F5F5F5;
   position: absolute;
   top: 0;
@@ -123,13 +179,10 @@ export default {
 .personal_info .address {
   display: flex;
   height: 111px;
-  /*width: 90%;*/
   box-sizing: border-box;
   background: #FFFFFF;
   border-radius: 4px;
   padding: 16px;
-  /*padding: 16px 16px 0 16px;*/
-  /*border: 1px solid #aa0303;*/
 }
 
 .detail {
@@ -170,11 +223,16 @@ export default {
 .shop_info {
   padding: 0 18px;
   margin-top: 16px;
-  /*box-sizing: border-box;*/
+  overflow-y: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+  top: 200px;
 }
 
 .shop {
-  height: 222px;
+  /*max-height: 222px;*/
   background: #fff;
   padding: 16px;
   box-sizing: border-box;

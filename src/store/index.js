@@ -1,27 +1,27 @@
 import { createStore } from 'vuex'
 
-const setLocalStorage = (state) => {
-  const { cartList } = state
-  localStorage.cartList = JSON.stringify(cartList)
-}
+// const setLocalStorage = (state) => {
+//   const { cartList } = state
+//   localStorage.cartList = JSON.stringify(cartList)
+// }
 
-const getLocalStorage = () => {
-  // console.log(localStorage.getItem('cartList'))
-  // console.log(typeof localStorage.getItem('cartList'))
-  // debugger
-  // if (localStorage.cartList) {
-  //   return JSON.parse(localStorage.cartList)
-  // } else {
-  //   return {}
-  // }
-  // console.log(localStorage.cartList)
-  return JSON.parse(localStorage.cartList) || {}
-  // return {}
-}
+// const getLocalStorage = () => {
+//   // console.log(localStorage.getItem('cartList'))
+//   // console.log(typeof localStorage.getItem('cartList'))
+//   // debugger
+//   // if (localStorage.cartList === 'undefined') {
+//   //   return {}
+//   // } else {
+//   //   return JSON.parse(localStorage.cartList)
+//   // }
+//   // console.log(localStorage.cartList)
+//   // return JSON.parse(localStorage.cartList) || {}
+//   return {}
+// }
 
 export default createStore({
   state: {
-    cartList: getLocalStorage()
+    cartList: {}
     // cartList: {
     //   shopId:{
     //    shopName:'',
@@ -44,12 +44,12 @@ export default createStore({
         shopName
       } = payload
       console.log(shopName)
-      debugger
       const shopInfo = state.cartList[shopId] || {
-        shopName: '', productList: {}
+        shopName: '',
+        productList: {}
       }
       shopInfo.shopName = shopName
-      let productInfo = shopInfo.productList[productId]
+      let productInfo = shopInfo?.productList[productId]
       if (!productInfo) {
         productInfo = product
         productInfo.count = 0
@@ -63,8 +63,7 @@ export default createStore({
       }
       shopInfo.productList[productId] = productInfo
       state.cartList[shopId] = shopInfo
-      setLocalStorage(state)
-      debugger
+      // setLocalStorage(state)
       console.log(state.cartList)
     },
     changeItemChecked (state, payload) {
@@ -73,28 +72,30 @@ export default createStore({
         productId
       } = payload
       console.log(shopId, productId)
-      const product = state.cartList[shopId].productList[productId]
+      const product = state.cartList[shopId]?.productList[productId]
       product.checked = !product.checked
-      setLocalStorage(state)
+      // setLocalStorage(state)
     },
     clearCartItem (state, payload) {
       const { shopId } = payload
-      state.cartList[shopId] = {}
-      setLocalStorage(state)
+      // state.cartList[shopId] = {}
+      state.cartList = {}
+      // setLocalStorage(state)
+      console.log(state.cartList)
     },
     changeItemAllChecked (state, payload) {
       const {
         shopId,
         allChecked
       } = payload
-      const productList = state.cartList[shopId].productList
+      const productList = state.cartList[shopId]?.productList
       for (const i in productList) {
         const product = productList[i]
         if (product.checked !== allChecked.value) {
           product.checked = allChecked.value
         }
       }
-      setLocalStorage(state)
+      // setLocalStorage(state)
     }
   },
   actions: {},
