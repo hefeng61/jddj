@@ -26,7 +26,7 @@
     <div class="shop_info">
       <div class="shop">
         <div style="padding-bottom: 16px">{{ shopName }}</div>
-        <div :class="divHeight">
+        <div :style="{maxHeight: maxHeight+'px',overflowY: isOverflow}">
         <template v-for="item in productList" :key="item.id" >
           <div style="display: flex;justify-content: space-between;padding-bottom: 16px;" v-if="item.count>0">
             <div style="display: flex">
@@ -44,9 +44,15 @@
         </template>
         </div>
         <div class="total_count" @click="handleCountClick">
-          <span>共计3件/1.4kg</span>
+          <span>共计{{totalCount}}件/1.4kg</span>
           <span>
-            <down theme="outline" size="24" fill="#999999" strokeLinejoin="miter" strokeLinecap="square"/>
+            <span v-if="showArrow">
+              <down theme="outline" size="24" fill="#999999" strokeLinejoin="miter" strokeLinecap="square"/>
+            </span>
+            <span v-else>
+              <up theme="outline" size="24" fill="#999999" strokeLinejoin="miter" strokeLinecap="square"/>
+            </span>
+
           </span>
         </div>
       </div>
@@ -61,11 +67,10 @@
 </template>
 
 <script>
-import { Left, Right, Down } from '@icon-park/vue-next'
+import { Left, Right, Down, Up } from '@icon-park/vue-next'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed, reactive, ref } from 'vue'
-// import { computed, toRefs } from 'vue'
+import { computed, ref, toRefs } from 'vue'
 
 const userCartListEffect = () => {
   const route = useRoute()
@@ -78,61 +83,81 @@ const userCartListEffect = () => {
   //   const productList = cartList[shopId]?.productList || []
   //   return productList
   // })
-  const productList = store.state.cartList[shopId]?.productList || []
-  const shopName = store.state.cartList[shopId]?.shopName || ''
+  const { cartList } = toRefs(store.state)
+  const productList = cartList.value[shopId]?.productList || []
+  const shopName = cartList.value[shopId]?.shopName || ''
   const totalPrice = computed(() => {
     let total = 0
-    // productList.forEach(item => {
-    //   total += item.price * item.count
-    // })
-    // return total.toFixed(2)
     for (const i in productList) {
       const product = productList[i]
       total += product.price * product.count
     }
     return total.toFixed(2)
   })
+  const totalCount = computed(() => {
+    let count = 0
+    for (const i in productList) {
+      const product = productList[i]
+      count += product.count
+    }
+    // productList.forEach(item => {
+    //   count += item.count
+    // })
+    return count
+  })
   return {
     productList,
     shopName,
-    totalPrice
+    totalPrice,
+    totalCount
   }
 }
 const useCountEffect = () => {
-  const divHeight = reactive({
-    'max-height': '124px',
-    'overflow-y': 'hidden'
-  })
+  const maxHeight = ref(124)
+  const isOverflow = ref('hidden')
+  const showArrow = ref(true)
   const handleCountClick = () => {
-
+    if (isOverflow.value === 'hidden') {
+      maxHeight.value = 310
+      isOverflow.value = 'scroll'
+      showArrow.value = false
+    } else {
+      maxHeight.value = 124
+      isOverflow.value = 'hidden'
+      showArrow.value = true
+    }
   }
-  return { divHeight, handleCountClick }
+  return { maxHeight, isOverflow, showArrow, handleCountClick }
 }
 export default {
   name: 'ConfirmOrder',
   components: {
     Left,
     Right,
-    Down
+    Down,
+    Up
   },
   setup () {
     const {
       productList,
       shopName,
-      totalPrice
-
+      totalPrice,
+      totalCount
     } = userCartListEffect()
 
     const handleBack = () => {
       window.history.back()
     }
-    const { divHeight, handleCountClick } = useCountEffect()
+    const { maxHeight, isOverflow, showArrow, handleCountClick } = useCountEffect()
     return {
       productList,
       shopName,
       handleBack,
       totalPrice,
-      divHeight,
+      totalCount,
+      maxHeight,
+      isOverflow,
+      showArrow,
       handleCountClick
     }
   }

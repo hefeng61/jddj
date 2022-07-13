@@ -3,8 +3,6 @@ import LoginView from '@/views/login/LoginView'
 import IndexView from '@/views/IndexView'
 import Mine from '@/views/Mine'
 import RegisterView from '@/views/login/RegisterView'
-import ShopDetail from '@/views/ShopDetail'
-import ConfirmOrder from '@/views/ConfirmOrder'
 import Cart from '@/components/shop/Cart'
 
 const routes = [
@@ -49,7 +47,16 @@ const routes = [
     path: '/cart',
     name: 'cart',
     component: Cart
+  }, {
+    path: '/pay',
+    name: 'pay',
+    component: () => import('@/components/pay/PayConfirm')
+  }, {
+    path: '/paySuccess',
+    name: 'paySuccess',
+    component: () => import('@/components/pay/PaySuccess')
   }
+
 ]
 
 const router = createRouter({
