@@ -27,24 +27,24 @@
       <div class="shop">
         <div style="padding-bottom: 16px">{{ shopName }}</div>
         <div :style="{maxHeight: maxHeight+'px',overflowY: isOverflow}">
-        <template v-for="item in productList" :key="item.id" >
-          <div style="display: flex;justify-content: space-between;padding-bottom: 16px;" v-if="item.count>0">
-            <div style="display: flex">
-              <img :src="item.imgUrl"
-                   style="width: 46px; height: 46px;padding-right: 16px">
+          <template v-for="item in productList" :key="item.id">
+            <div style="display: flex;justify-content: space-between;padding-bottom: 16px;" v-if="item.count>0">
+              <div style="display: flex">
+                <img :src="item.imgUrl"
+                     style="width: 46px; height: 46px;padding-right: 16px">
+                <div>
+                  <span>{{ item.name }}</span>
+                  <span style="display: block">&yen;{{ item.price }} x {{ item.count }}</span>
+                </div>
+              </div>
               <div>
-                <span>{{ item.name }}</span>
-                <span style="display: block">&yen;{{ item.price }} x {{ item.count }}</span>
+                &yen;{{ (item.price * item.count).toFixed(2) }}
               </div>
             </div>
-            <div>
-              &yen;{{ (item.price * item.count).toFixed(2) }}
-            </div>
-          </div>
-        </template>
+          </template>
         </div>
         <div class="total_count" @click="handleCountClick">
-          <span>共计{{totalCount}}件/1.4kg</span>
+          <span>共计{{ totalCount }}件/1.4kg</span>
           <span>
             <span v-if="showArrow">
               <down theme="outline" size="24" fill="#999999" strokeLinejoin="miter" strokeLinecap="square"/>
@@ -59,11 +59,14 @@
     </div>
     <div class="footer">
       <div class="price">实付金额 &yen;{{ totalPrice }}</div>
-      <div class="submit_btn">
+      <div class="submit_btn" @click="handlePayClick">
         提交订单
       </div>
     </div>
+    <PayConfirm v-if="showPay"/>
+    <!--    <PaySuccess v-if="showSuccess"/>-->
   </div>
+  <div class="payMask" v-if="showPay"></div>
 </template>
 
 <script>
@@ -71,6 +74,8 @@ import { Left, Right, Down, Up } from '@icon-park/vue-next'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed, ref, toRefs } from 'vue'
+import PayConfirm from '@/components/pay/PayConfirm'
+import PaySuccess from '@/components/pay/PaySuccess'
 
 const userCartListEffect = () => {
   const route = useRoute()
@@ -132,6 +137,8 @@ const useCountEffect = () => {
 export default {
   name: 'ConfirmOrder',
   components: {
+    PaySuccess,
+    PayConfirm,
     Left,
     Right,
     Down,
@@ -148,6 +155,13 @@ export default {
     const handleBack = () => {
       window.history.back()
     }
+
+    const showPay = ref(false)
+    const showSuccess = ref(false)
+    const handlePayClick = () => {
+      showPay.value = true
+    }
+
     const { maxHeight, isOverflow, showArrow, handleCountClick } = useCountEffect()
     return {
       productList,
@@ -158,7 +172,10 @@ export default {
       maxHeight,
       isOverflow,
       showArrow,
-      handleCountClick
+      handleCountClick,
+      handlePayClick,
+      showPay,
+      showSuccess
     }
   }
 }
@@ -172,7 +189,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-
+  /*z-index: 2;*/
 }
 
 .personal_info {
@@ -303,5 +320,15 @@ export default {
   background: #4FB0F9;
   position: absolute;
   right: 0;
+}
+
+.payMask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 </style>

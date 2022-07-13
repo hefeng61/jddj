@@ -1,32 +1,43 @@
 <template>
-  <div class="wrapper">
+  <div class="content">
     <div>
       <div class="title">确认要离开收银台？</div>
       <div class="tip">请尽快完成支付，否则将被取消</div>
       <div class="btns">
         <span class="cancel">取消订单</span>
-        <span class="confirm">确认支付</span>
+        <span class="confirm" @click="hanlePayConfirm">确认支付</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+const usePayConfirm = () => {
+  const showPayConfirm = ref(false)
+}
 export default {
-  name: 'PayConfirm'
+  name: 'PayConfirm',
+  setup () {
+
+  }
 }
 </script>
 
 <style scoped>
-.wrapper {
+.content {
   width: 301px;
   height: 157px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 4px;
   border: 1px solid #E5E5E5;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 2;
 }
 
 .title {
@@ -42,10 +53,12 @@ export default {
   color: #666666;
   padding-bottom: 24px;
 }
-.btns{
+
+.btns {
   display: flex;
   justify-content: space-between;
 }
+
 .cancel {
   width: 80px;
   height: 32px;
@@ -57,7 +70,8 @@ export default {
   line-height: 32px;
   color: #0091FF;
 }
-.confirm{
+
+.confirm {
   width: 80px;
   height: 32px;
   background: #4FB0F9;
